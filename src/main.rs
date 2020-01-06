@@ -1,3 +1,7 @@
+#[macro_use]
+extern crate clap;
+
+use clap::{App, Arg, ArgGroup};
 use glib::MainLoop;
 use gstreamer;
 use gstreamer_rtsp_server::{
@@ -5,12 +9,9 @@ use gstreamer_rtsp_server::{
     RTSPServerExtManual,
 };
 
-mod pipe_builder;
+use pipe_builder::{Encoder, Input, VideoSize};
 
-use pipe_builder::{create_pipe, Encoder, Input, VideoSize};
-#[macro_use]
-extern crate clap;
-use clap::{App, Arg, ArgGroup};
+mod pipe_builder;
 
 fn is_number(v: String) -> Result<(), String> {
     match v.trim().parse::<u32>() {
