@@ -1,3 +1,5 @@
+use std::fmt;
+
 pub struct VideoSize {
     width: u32,
     height: u32,
@@ -16,10 +18,29 @@ impl VideoSize {
 
 #[derive(PartialEq)]
 pub enum Input {
-    // device, dimensions
     Video4Linux(String),
     SharedMemory(String),
     Raspberry,
+}
+
+impl Input {
+    pub fn all() -> Vec<Input> {
+        vec![
+            Input::Video4Linux(String::new()),
+            Input::SharedMemory(String::new()),
+            Input::Raspberry,
+        ]
+    }
+}
+
+impl fmt::Display for Input {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Input::Video4Linux(_) => write!(f, "v4l2"),
+            Input::SharedMemory(_) => write!(f, "shmem"),
+            Input::Raspberry => write!(f, "rpi"),
+        }
+    }
 }
 
 #[derive(PartialEq, Eq)]
@@ -27,6 +48,22 @@ pub enum Encoder {
     Software,
     OpenMAX,
     Camera,
+}
+
+impl Encoder {
+    pub fn all() -> Vec<Encoder> {
+        vec![Encoder::Software, Encoder::OpenMAX, Encoder::Camera]
+    }
+}
+
+impl fmt::Display for Encoder {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Encoder::Software => write!(f, "x264enc"),
+            Encoder::OpenMAX => write!(f, "omx"),
+            Encoder::Camera => write!(f, "camera"),
+        }
+    }
 }
 
 pub fn create_pipe(inp: Input, enc: Encoder, dim: VideoSize) -> String {
