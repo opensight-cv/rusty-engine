@@ -15,10 +15,7 @@ use clap::{App, Arg, ArgGroup};
 fn is_number(v: String) -> Result<(), String> {
     match v.trim().parse::<u32>() {
         Ok(_) => Ok(()),
-        _ => Err(String::from(format!(
-            "expected a positive number, got {}",
-            v
-        ))),
+        _ => Err(format!("expected a positive number, got {}", v)),
     }
 }
 
