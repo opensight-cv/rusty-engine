@@ -1,6 +1,9 @@
 [package]
 name = "rusty-engine"
 version = "0.1.0"
+description = "Rust reimagining of potential-engine"
+readme = "README.md"
+license = "MIT"
 authors = ["Caleb Xavier Berger <caleb.x.berger@gmail.com>"]
 edition = "2018"
 
@@ -11,3 +14,6 @@ clap = "2.33.0"
 glib = "0.9.0"
 gstreamer = "0.15.0"
 gstreamer-rtsp-server = "0.15.0"
+
+[package.metadata.deb]
+depends="libgstrtspserver-1.0 (>=1.14.4-1), gstreamer1.0-plugins-ugly (>=1.14.4-1), gstreamer1.0-plugins-good (>=1.14.4-1), gstreamer1.0-plugins-bad (>=1.14.4-1)"
