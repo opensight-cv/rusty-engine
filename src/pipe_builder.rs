@@ -86,9 +86,10 @@ pub fn create_pipe(inp: Input, enc: Encoder, dim: VideoSize) -> String {
     let inp_str = match inp {
         Input::Video4Linux(device) => format!("v4l2src device={}", device),
         Input::Raspberry => String::from("rpicamsrc"),
-        Input::SharedMemory(socket) => {
-            format!("shmsrc socket-path={} ! video/x-raw,format=I420", socket)
-        }
+        Input::SharedMemory(socket) => format!(
+            "shmsrc socket-path={} ! capsfilter caps=video/x-raw,format=I420",
+            socket
+        ),
     };
     let enc_str = match enc {
         Encoder::Software => format!(
