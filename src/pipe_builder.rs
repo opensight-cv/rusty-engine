@@ -111,6 +111,7 @@ pub fn create_pipe(inp: Input, enc: Encoder, dim: VideoSize) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
+
     fn test_size() -> VideoSize {
         VideoSize::new(320, 240, 30)
     }
@@ -130,7 +131,7 @@ mod tests {
             create_pipe(
                 Input::Video4Linux("/dev/video0".to_string()),
                 Encoder::Software,
-                test_size()
+                test_size(),
             )
         );
         assert_eq!(
@@ -138,7 +139,7 @@ mod tests {
             create_pipe(
                 Input::Video4Linux("/dev/video0".to_string()),
                 Encoder::OpenMAX,
-                test_size()
+                test_size(),
             )
         );
     }
