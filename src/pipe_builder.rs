@@ -1,4 +1,4 @@
-use std::fmt;
+use std::{convert, fmt, str::FromStr};
 
 pub struct VideoSize {
     width: u32,
@@ -62,6 +62,19 @@ impl fmt::Display for Encoder {
             Encoder::Software => write!(f, "x264enc"),
             Encoder::OpenMAX => write!(f, "omx"),
             Encoder::Camera => write!(f, "camera"),
+        }
+    }
+}
+
+impl FromStr for Encoder {
+    // shut up
+    type Err = convert::Infallible;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "omx" => Ok(Encoder::OpenMAX),
+            "camera" => Ok(Encoder::Camera),
+            "x264enc" | _ => Ok(Encoder::Software),
         }
     }
 }

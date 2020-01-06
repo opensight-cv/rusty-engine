@@ -110,12 +110,46 @@ fn main() {
         return;
     }
     // try to set up video size
+    let width = _matches
+        .value_of("width")
+        .unwrap()
+        .trim()
+        .parse::<u32>()
+        .unwrap(); // turbofish!
+    let height = _matches
+        .value_of("height")
+        .unwrap()
+        .trim()
+        .parse::<u32>()
+        .unwrap();
+    let framerate = _matches
+        .value_of("framerate")
+        .unwrap()
+        .trim()
+        .parse::<u32>()
+        .unwrap();
+    let size = VideoSize::new(width, height, framerate);
+    let device = String::from(_matches.value_of("device").unwrap_or(""));
+    let input = match _matches.value_of("input").unwrap() {
+        "v4l2" => Input::Video4Linux(device),
+        "shmem" => Input::SharedMemory(device),
+        "rpi" => Input::Raspberry,
+        _ => Input::Video4Linux(String::from("/dev/video0")),
+    };
+    let encoder = _matches
+        .value_of("encoder")
+        .unwrap()
+        .trim()
+        .parse::<Encoder>()
+        .unwrap();
+    let pipe = pipe_builder::create_pipe(input, encoder, size);
+    println!("Pipeline constructed: {}", pipe);
     gstreamer::init().expect("GStreamer could not init!");
     let loop_ = MainLoop::new(Option::None, false);
     let server = RTSPServer::new();
     server.set_service("1181");
     let factory = RTSPMediaFactory::new();
-    factory.set_launch("shmsrc socket-path=/tmp/blah ! video/x-raw,format=I420,width=320,height=240,framerate=30/1 ! x264enc ! rtph264pay name=pay0");
+    factory.set_launch(&pipe);
     factory.set_shared(true);
     let mounts = server
         .get_mount_points()
