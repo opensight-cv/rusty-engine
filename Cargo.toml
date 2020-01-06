@@ -1,5 +1,5 @@
 [package]
-name = "potentially-rusty"
+name = "rusty-engine"
 version = "0.1.0"
 authors = ["Caleb Xavier Berger <caleb.x.berger@gmail.com>"]
 edition = "2018"
