@@ -16,7 +16,7 @@ impl VideoSize {
     }
 }
 
-#[derive(PartialEq)]
+#[derive(Debug, PartialEq)]
 pub enum Input {
     Video4Linux(String),
     SharedMemory(String),
@@ -43,7 +43,19 @@ impl fmt::Display for Input {
     }
 }
 
-#[derive(PartialEq, Eq)]
+impl FromStr for Input {
+    type Err = convert::Infallible;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "rpi" => Ok(Self::Raspberry),
+            "shmem" => Ok(Self::SharedMemory(String::new())),
+            "v4l2" | _ => Ok(Self::Video4Linux(String::new())),
+        }
+    }
+}
+
+#[derive(Debug, PartialEq, Eq)]
 pub enum Encoder {
     Software,
     OpenMAX,
