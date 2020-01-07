@@ -16,8 +16,9 @@ arch:
   - arm64 # while this technically isn't the RPi4 it's a nice proof of concept 
 cache: cargo
 before_deploy:
-  - cargo install cargo-deb || true
   - cargo deb
+before_install:
+  - cargo install cargo-deb || true
 deploy:
   - edge: true
     file:
