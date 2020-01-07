@@ -1,7 +1,7 @@
---- 
-addons: 
-  apt: 
-    packages: 
+---
+addons:
+  apt:
+    packages:
       - libgstreamer1.0-dev
       - libgstreamer-plugins-base1.0-dev
       - gstreamer1.0-plugins-base
@@ -12,11 +12,21 @@ addons:
       - libgstrtspserver-1.0-dev
     update: true
 arch:
-  - amd64 
+  - amd64
   - arm64 # while this technically isn't the RPi4 it's a nice proof of concept 
 cache: cargo
+before_deploy:
+  - cargo install cargo-deb || true
+  - cargo deb
+deploy:
+  - edge: true
+    file:
+      - target/debian/*.deb
+    provider: releases
+    on:
+      tags: true
 dist: bionic
 language: rust
 os: linux
-rust: 
+rust:
   - stable
