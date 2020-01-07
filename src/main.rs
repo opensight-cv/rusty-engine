@@ -1,3 +1,6 @@
+mod networker;
+mod pipe_builder;
+
 use glib::MainLoop;
 use gstreamer;
 use gstreamer_rtsp_server::{
@@ -7,8 +10,6 @@ use gstreamer_rtsp_server::{
 use structopt::StructOpt;
 
 use pipe_builder::{Encoder, Input, VideoSize};
-
-mod pipe_builder;
 
 #[derive(Debug, StructOpt)]
 #[structopt(
@@ -57,6 +58,9 @@ struct Opt {
     list_in: bool,
     #[structopt(long, help = "List all encoders and exit.", group = "list")]
     list_enc: bool,
+
+    #[structopt(flatten)]
+    net_opt: networker::NetOpt,
 }
 
 fn main() {
@@ -90,7 +94,7 @@ fn main() {
     gstreamer::init().expect("GStreamer could not init!");
     let loop_ = MainLoop::new(Option::None, false);
     let server = RTSPServer::new();
-    server.set_service("1181");
+    server.set_service(&opt.net_opt.get_port().to_string());
     let factory = RTSPMediaFactory::new();
     factory.set_launch(&pipe);
     factory.set_shared(true);
@@ -98,7 +102,7 @@ fn main() {
         .get_mount_points()
         .expect("Failed to get mount points");
     // set up mounts
-    mounts.add_factory("/stream", &factory);
+    mounts.add_factory(opt.net_opt.get_url(), &factory);
     server.attach(Option::None);
     println!("Starting loop...");
     loop_.run();
