@@ -8,6 +8,6 @@ if [ "${CARGO}" == "cross" ]; then
     cargo install cross || true
     sudo systemctl start docker
     echo Building docker image
-    $(pwd)/cross-build.sh
+    "$(pwd)"/cross-build.sh
 fi
 eval "$CARGO $TASK --target $TARGET"
