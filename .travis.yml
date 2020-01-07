@@ -13,18 +13,14 @@ addons:
     update: true
 cache: cargo
 dist: bionic
-env: 
-  - TARGET=build
-  - TARGET=test
 jobs: 
   - 
     env: "CARGO_CMD=\"cargo\" TARGET=\"x86_64-pc-linux-gnu\""
-    name: "stock cargo"
   - 
     env: "CARGO_CMD=\"cross\" TARGET=\"armv7-unknown-linux-gnueabihf\""
-    name: "cross cargo"
 language: rust
 rust: 
   - stable
 script: 
-  - "./ci/build.sh"
+  - "TASK=build ./ci/build.sh"
+  - "TASK=test ./ci/build.sh"
