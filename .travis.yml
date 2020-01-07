@@ -9,9 +9,22 @@ addons:
       - gstreamer1.0-plugins-ugly
       - gstreamer1.0-libav
       - libgstrtspserver-1.0-dev
+    update: true
+before_install: 
+  - "cargo install cross"
+  - "sudo systemctl start docker"
 cache: cargo
 dist: bionic
+jobs: 
+  - 
+    env: CARGO_CMD="cargo"
+    name: "stock cargo"
+  - 
+    env: CARGO_CMD="cross"
+    name: "cross cargo"
 language: rust
 rust: 
   - stable
-
+script: 
+  - "${CARGO_CMD} build --verbose"
+  - "${CARGO_CMD} test --verbose"
