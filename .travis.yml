@@ -1,3 +1,4 @@
+--- 
 addons: 
   apt: 
     packages: 
@@ -9,9 +10,12 @@ addons:
       - gstreamer1.0-plugins-ugly
       - gstreamer1.0-libav
       - libgstrtspserver-1.0-dev
+    update: true
+arch:
+  - amd64 
+  - arm64 # while this technically isn't the RPi4 it's a nice proof of concept 
 cache: cargo
 dist: bionic
 language: rust
 rust: 
   - stable
-
