@@ -15,6 +15,7 @@ ENV PATH="${PATH}:/opt/cargo/bin"
 ENV RUST_TOOLCHAIN="stable"
 RUN rustup toolchain install "${RUST_TOOLCHAIN}"
 RUN rustup default "${RUST_TOOLCHAIN}"
+RUN cargo install cargo-deb || true
 # gstreamer
 RUN apt-get install --no-install-recommends -y libgstreamer1.0-dev \
     libgstreamer-plugins-base1.0-dev \
