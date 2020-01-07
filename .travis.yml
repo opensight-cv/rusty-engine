@@ -11,16 +11,11 @@ addons:
       - gstreamer1.0-libav
       - libgstrtspserver-1.0-dev
     update: true
+arch:
+  - amd64 
+  - arm64 # while this technically isn't the RPi4 it's a nice proof of concept 
 cache: cargo
 dist: bionic
-jobs: 
-  - 
-    env: "CARGO=\"cargo\" TARGET=\"x86_64-unknown-linux-gnu\""
-  - 
-    env: "CARGO=\"cross\" TARGET=\"armv7-unknown-linux-gnueabihf\""
 language: rust
 rust: 
   - stable
-script: 
-  - "TASK=build ./ci/build.sh"
-  - "TASK=test ./ci/build.sh"
