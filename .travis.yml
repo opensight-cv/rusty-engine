@@ -17,5 +17,6 @@ arch:
 cache: cargo
 dist: bionic
 language: rust
+os: linux
 rust: 
   - stable
