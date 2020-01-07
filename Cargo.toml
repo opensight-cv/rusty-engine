@@ -7,6 +7,9 @@ license = "MIT"
 authors = ["Caleb Xavier Berger <caleb.x.berger@gmail.com>"]
 edition = "2018"
 
+repository = "https://github.com/opensight-cv/rusty-engine"
+travis-ci = { repository = "opensight-cv/rusty-engine" }
+
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
