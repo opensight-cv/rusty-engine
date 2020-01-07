@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 if [ "${CARGO}" == "cross" ]; then
     # set up docker
     cargo install cross
@@ -5,4 +7,4 @@ if [ "${CARGO}" == "cross" ]; then
     echo Building docker image
     $(pwd)/cross-build.sh
 fi
-${CARGO} ${TASK} --target ${TARGET}
+${CARGO} "${TASK}" --target "${TARGET}"
