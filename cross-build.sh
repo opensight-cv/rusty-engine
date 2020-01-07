@@ -1,3 +1,6 @@
+#!/usr/bin/env bash
+set -e
+
 # bind last argument in portable manner
 for last in "$@"; do :; done
 
@@ -8,7 +11,7 @@ ${DOCKER} build -t rusty-engine:latest docker/
 rm ${docker_qemu}
 
 if [ "${last}" == "run" ]; then
-    ${DOCKER} run --rm --privileged \
+    docker run --rm --privileged \
         --volume "$(pwd)":/docking-bay \
         --name "opsi-rusty-engine-arm" \
         rusty-engine:latest \
