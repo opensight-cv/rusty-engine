@@ -7,7 +7,7 @@ for last in "$@"; do :; done
 docker_qemu="docker/qemu-arm-static"
 rm -f ${docker_qemu}
 cp $(which qemu-arm-static) ${docker_qemu}
-${DOCKER} build -t rusty-engine:latest docker/
+docker build -t rusty-engine:latest docker/
 rm ${docker_qemu}
 
 if [ "${last}" == "run" ]; then
