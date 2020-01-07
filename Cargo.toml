@@ -4,6 +4,7 @@ version = "0.1.0"
 description = "Rust reimagining of potential-engine"
 readme = "README.md"
 license = "MIT"
+license-file="LICENSE"
 authors = ["Caleb Xavier Berger <caleb.x.berger@gmail.com>"]
 edition = "2018"
 
