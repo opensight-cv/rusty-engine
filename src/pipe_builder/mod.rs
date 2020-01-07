@@ -1,4 +1,6 @@
-use std::{convert, fmt, str::FromStr};
+mod encoder;
+mod input;
+pub use self::{encoder::Encoder, input::Input};
 
 pub struct VideoSize {
     width: u32,
@@ -12,81 +14,6 @@ impl VideoSize {
             width,
             height,
             framerate,
-        }
-    }
-}
-
-#[derive(Debug, PartialEq)]
-pub enum Input {
-    Video4Linux(String),
-    SharedMemory(String),
-    Raspberry,
-}
-
-impl Input {
-    pub fn all() -> Vec<Input> {
-        vec![
-            Input::Video4Linux(String::new()),
-            Input::SharedMemory(String::new()),
-            Input::Raspberry,
-        ]
-    }
-}
-
-impl fmt::Display for Input {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self {
-            Input::Video4Linux(_) => write!(f, "v4l2"),
-            Input::SharedMemory(_) => write!(f, "shmem"),
-            Input::Raspberry => write!(f, "rpi"),
-        }
-    }
-}
-
-impl FromStr for Input {
-    type Err = convert::Infallible;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s {
-            "rpi" => Ok(Self::Raspberry),
-            "shmem" => Ok(Self::SharedMemory(String::new())),
-            "v4l2" | _ => Ok(Self::Video4Linux(String::new())),
-        }
-    }
-}
-
-#[derive(Debug, PartialEq, Eq)]
-pub enum Encoder {
-    Software,
-    OpenMAX,
-    Camera,
-}
-
-impl Encoder {
-    pub fn all() -> Vec<Encoder> {
-        vec![Encoder::Software, Encoder::OpenMAX, Encoder::Camera]
-    }
-}
-
-impl fmt::Display for Encoder {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self {
-            Encoder::Software => write!(f, "x264enc"),
-            Encoder::OpenMAX => write!(f, "omx"),
-            Encoder::Camera => write!(f, "camera"),
-        }
-    }
-}
-
-impl FromStr for Encoder {
-    // shut up
-    type Err = convert::Infallible;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s {
-            "omx" => Ok(Encoder::OpenMAX),
-            "camera" => Ok(Encoder::Camera),
-            "x264enc" | _ => Ok(Encoder::Software),
         }
     }
 }
