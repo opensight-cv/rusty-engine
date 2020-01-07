@@ -15,7 +15,7 @@ cache: cargo
 dist: bionic
 jobs: 
   - 
-    env: "CARGO_CMD=\"cargo\" TARGET=\"x86_64-pc-linux-gnu\""
+    env: "CARGO_CMD=\"cargo\" TARGET=\"x86_64-unknown-linux-gnu\""
   - 
     env: "CARGO_CMD=\"cross\" TARGET=\"armv7-unknown-linux-gnueabihf\""
 language: rust
