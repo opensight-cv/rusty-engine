@@ -4,7 +4,6 @@ version = "0.1.0"
 description = "Rust reimagining of potential-engine"
 readme = "README.md"
 license = "MIT"
-license-file="LICENSE"
 authors = ["Caleb Xavier Berger <caleb.x.berger@gmail.com>"]
 edition = "2018"
 
@@ -17,4 +16,5 @@ gstreamer = "0.15.0"
 gstreamer-rtsp-server = "0.15.0"
 
 [package.metadata.deb]
+license-file=["LICENSE", "0"]
 depends="libgstrtspserver-1.0 (>=1.14.4-1), gstreamer1.0-plugins-ugly (>=1.14.4-1), gstreamer1.0-plugins-good (>=1.14.4-1), gstreamer1.0-plugins-bad (>=1.14.4-1)"
