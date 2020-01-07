@@ -13,6 +13,9 @@ addons:
     update: true
 cache: cargo
 dist: bionic
+env:
+  global:
+    - DOCKER=docker
 jobs: 
   - 
     env: "CARGO=\"cargo\" TARGET=\"x86_64-unknown-linux-gnu\""
