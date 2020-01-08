@@ -10,11 +10,13 @@ RUN apt-get install -y build-essential curl debhelper g++-arm-linux-gnueabihf li
 # rust
 ENV RUSTUP_HOME=/opt/rustup
 ENV CARGO_HOME=/opt/cargo
+# TODO: somewhere around here SSL apparently goes nuts?
 RUN curl https://sh.rustup.rs -sSf | sh -s -- --profile minimal --default-toolchain stable -y
 ENV PATH="${PATH}:/opt/cargo/bin"
 ENV RUST_TOOLCHAIN="stable"
 RUN rustup toolchain install "${RUST_TOOLCHAIN}"
 RUN rustup default "${RUST_TOOLCHAIN}"
+# deb generator
 RUN cargo install cargo-deb || true
 # gstreamer
 RUN apt-get install --no-install-recommends -y libgstreamer1.0-dev \
