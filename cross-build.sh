@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
+# detect if sudo is required on docker
 DOCKER="docker"
 if ! ${DOCKER} ps >/dev/null 2>&1; then
     DOCKER="sudo docker"
@@ -16,6 +17,7 @@ for last in "$@"; do :; done
 docker_qemu="docker/qemu-arm-static"
 rm -f ${docker_qemu}
 cp "$(which qemu-arm-static)" ${docker_qemu}
+# build image
 ${DOCKER} build -t rusty-engine:latest docker/
 rm ${docker_qemu}
 
