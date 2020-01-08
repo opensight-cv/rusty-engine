@@ -23,7 +23,6 @@ if [ "${last}" == "run" ]; then
     cross build --target armv7-unknown-linux-gnueabihf --release
     ${DOCKER} run --rm --privileged \
         --volume "$(pwd)":/docking-bay \
-        --name "opsi-rusty-engine-arm" \
         rusty-engine:latest \
         bash -e -o pipefail -c \
         "cd /docking-bay; cargo deb"
