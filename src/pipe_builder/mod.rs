@@ -23,7 +23,7 @@ impl VideoSize {
 }
 
 pub fn create_pipe(pipe: &Pipe) -> String {
-    if pipe.input() == Input::Raspberry && pipe.encoder() != Encoder::Camera {
+    if *pipe.input() == Input::Raspberry && *pipe.encoder() != Encoder::Camera {
         println!("using a raspberry pi camera with any encoder besides the one provided by the driver is a Bad Idea");
     }
     let inp_str = match pipe.input() {
@@ -47,7 +47,9 @@ pub fn create_pipe(pipe: &Pipe) -> String {
             h = pipe.size().height,
             f = pipe.size().framerate
         ),
-        // Encoder::OpenMAX => format!("video/x-raw,width={w},height={h},framerate={f}/1 ! videoconvert ! video/x-raw,format=I420 ! omxh264enc ! video/x-h264,profile=baseline", w = dim.width, h = dim.height, f = dim.framerate)
+        Encoder::OpenMAX => format!(
+            "video/x-raw,width={w},height={h},framerate={f}/1 ! videoconvert ! video/x-raw,format=I420 ! omxh264enc ! video/x-h264,profile=baseline",
+            w = pipe.size().width, h = pipe.size().height, f = pipe.size().framerate)
     };
     vec![inp_str, enc_str, String::from("rtph264pay name=pay0")].join(" ! ")
 }
