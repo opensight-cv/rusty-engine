@@ -54,6 +54,8 @@ struct Opt {
         default_value_if("input", Some("rpi"), "camera")
     )]
     encoder: Encoder,
+    #[structopt(long, help = "Pipelines to run as JSON.")]
+    pipes_as_json: Option<String>,
     #[structopt(long, help = "List all input modes and exit.", group = "list")]
     list_in: bool,
     #[structopt(long, help = "List all encoders and exit.", group = "list")]
@@ -78,6 +80,12 @@ fn main() {
             println!("{}", enc);
         }
         return;
+    }
+    if opt.pipes_as_json.is_some() {
+        println!(
+            "{:#?}",
+            serde_json::from_str::<Vec<Pipe>>(&opt.pipes_as_json.unwrap())
+        );
     }
     // try to set up video size
     let size = VideoSize::new(opt.width, opt.height, opt.framerate);
