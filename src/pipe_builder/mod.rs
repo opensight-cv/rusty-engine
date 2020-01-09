@@ -43,7 +43,7 @@ pub fn create_pipe(inp: Input, enc: Encoder, dim: VideoSize) -> String {
             h = dim.height,
             f = dim.framerate
         ),
-        Encoder::OpenMAX => format!("videoconvert ! video/x-raw,format=I420,width={w},height={h},framerate={f}/1 ! omxh264enc ! video/x-h264", w = dim.width, h = dim.height, f = dim.framerate)
+        Encoder::OpenMAX => format!("video/x-raw,width={w},height={h},framerate={f}/1 ! videoconvert ! video/x-raw,format=I420 ! omxh264enc ! video/x-h264,profile=baseline", w = dim.width, h = dim.height, f = dim.framerate)
     };
     vec![inp_str, enc_str, String::from("rtph264pay name=pay0")].join(" ! ")
 }
