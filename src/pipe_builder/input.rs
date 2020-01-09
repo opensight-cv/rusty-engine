@@ -1,6 +1,7 @@
+use serde::Deserialize;
 use std::{convert, fmt, str::FromStr};
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Deserialize)]
 pub enum Input {
     Video4Linux(String),
     SharedMemory(String),
