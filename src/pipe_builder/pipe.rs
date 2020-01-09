@@ -5,14 +5,21 @@ pub struct Pipe {
     input: super::Input,
     encoder: super::Encoder,
     size: super::VideoSize,
+    url: String,
 }
 
 impl Pipe {
-    pub fn new(input: super::Input, encoder: super::Encoder, size: super::VideoSize) -> Pipe {
+    pub fn new(
+        input: super::Input,
+        encoder: super::Encoder,
+        size: super::VideoSize,
+        url: String,
+    ) -> Pipe {
         Pipe {
             input,
             encoder,
             size,
+            url,
         }
     }
 
@@ -26,5 +33,9 @@ impl Pipe {
 
     pub fn size(&self) -> &super::VideoSize {
         &self.size
+    }
+
+    pub fn url(&self) -> &String {
+        &self.url
     }
 }
