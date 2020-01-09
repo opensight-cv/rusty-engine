@@ -20,4 +20,4 @@ gstreamer-rtsp-server = "0.15.0"
 
 [package.metadata.deb]
 license-file=["LICENSE", "0"]
-depends="libgstrtspserver-1.0 (>=1.14.4-1), gstreamer1.0-plugins-ugly (>=1.14.4-1), gstreamer1.0-plugins-good (>=1.14.4-1), gstreamer1.0-plugins-bad (>=1.14.4-1)"
+depends="libgstrtspserver-1.0-0 (>=1.14.4-1), gstreamer1.0-plugins-ugly (>=1.14.4-1), gstreamer1.0-plugins-good (>=1.14.4-1), gstreamer1.0-plugins-bad (>=1.14.4-1)"
