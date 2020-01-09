@@ -5,7 +5,7 @@ pub use self::{encoder::Encoder, input::Input, pipe::Pipe};
 
 use serde::Deserialize;
 
-#[derive(Deserialize)]
+#[derive(Debug, Deserialize)]
 pub struct VideoSize {
     width: u32,
     height: u32,

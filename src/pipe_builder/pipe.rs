@@ -1,6 +1,6 @@
 use serde::Deserialize;
 
-#[derive(Deserialize)]
+#[derive(Debug, Deserialize)]
 pub struct Pipe {
     input: super::Input,
     encoder: super::Encoder,
