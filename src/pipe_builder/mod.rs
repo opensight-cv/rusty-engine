@@ -1,6 +1,7 @@
 mod encoder;
 mod input;
-pub use self::{encoder::Encoder, input::Input};
+mod pipe;
+pub use self::{encoder::Encoder, input::Input, pipe::Pipe};
 
 use serde::Deserialize;
 
@@ -21,11 +22,11 @@ impl VideoSize {
     }
 }
 
-pub fn create_pipe(inp: Input, enc: Encoder, dim: VideoSize) -> String {
-    if inp == Input::Raspberry && enc != Encoder::Camera {
+pub fn create_pipe(pipe: &Pipe) -> String {
+    if pipe.input() == Input::Raspberry && pipe.encoder() != Encoder::Camera {
         println!("using a raspberry pi camera with any encoder besides the one provided by the driver is a Bad Idea");
     }
-    let inp_str = match inp {
+    let inp_str = match pipe.input() {
         Input::Video4Linux(device) => format!("v4l2src device={}", device),
         Input::Raspberry => String::from("rpicamsrc"),
         Input::SharedMemory(socket) => format!(
@@ -33,20 +34,20 @@ pub fn create_pipe(inp: Input, enc: Encoder, dim: VideoSize) -> String {
             socket
         ),
     };
-    let enc_str = match enc {
+    let enc_str = match pipe.encoder() {
         Encoder::Software => format!(
             "video/x-raw,width={w},height={h},framerate={f}/1 ! videoconvert ! x264enc tune=zerolatency",
-            w = dim.width,
-            h = dim.height,
-            f = dim.framerate
+            w = pipe.size().width,
+            h = pipe.size().height,
+            f = pipe.size().framerate
         ),
         Encoder::Camera => format!(
             "video/x-h264,width={w},height={h},framerate={f}/1",
-            w = dim.width,
-            h = dim.height,
-            f = dim.framerate
+            w = pipe.size().width,
+            h = pipe.size().height,
+            f = pipe.size().framerate
         ),
-        Encoder::OpenMAX => format!("video/x-raw,width={w},height={h},framerate={f}/1 ! videoconvert ! video/x-raw,format=I420 ! omxh264enc ! video/x-h264,profile=baseline", w = dim.width, h = dim.height, f = dim.framerate)
+        // Encoder::OpenMAX => format!("video/x-raw,width={w},height={h},framerate={f}/1 ! videoconvert ! video/x-raw,format=I420 ! omxh264enc ! video/x-h264,profile=baseline", w = dim.width, h = dim.height, f = dim.framerate)
     };
     vec![inp_str, enc_str, String::from("rtph264pay name=pay0")].join(" ! ")
 }
