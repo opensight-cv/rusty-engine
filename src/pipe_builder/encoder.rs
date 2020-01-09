@@ -1,6 +1,7 @@
+use serde::Deserialize;
 use std::{convert, fmt, str::FromStr};
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq, Deserialize)]
 pub enum Encoder {
     Software,
     OpenMAX,

@@ -1,7 +1,11 @@
 mod encoder;
 mod input;
-pub use self::{encoder::Encoder, input::Input};
+mod pipe;
+pub use self::{encoder::Encoder, input::Input, pipe::Pipe};
 
+use serde::Deserialize;
+
+#[derive(Debug, Deserialize)]
 pub struct VideoSize {
     width: u32,
     height: u32,
@@ -18,11 +22,11 @@ impl VideoSize {
     }
 }
 
-pub fn create_pipe(inp: Input, enc: Encoder, dim: VideoSize) -> String {
-    if inp == Input::Raspberry && enc != Encoder::Camera {
+pub fn create_pipe(pipe: &Pipe) -> String {
+    if *pipe.input() == Input::Raspberry && *pipe.encoder() != Encoder::Camera {
         println!("using a raspberry pi camera with any encoder besides the one provided by the driver is a Bad Idea");
     }
-    let inp_str = match inp {
+    let inp_str = match pipe.input() {
         Input::Video4Linux(device) => format!("v4l2src device={}", device),
         Input::Raspberry => String::from("rpicamsrc"),
         Input::SharedMemory(socket) => format!(
@@ -30,20 +34,22 @@ pub fn create_pipe(inp: Input, enc: Encoder, dim: VideoSize) -> String {
             socket
         ),
     };
-    let enc_str = match enc {
+    let enc_str = match pipe.encoder() {
         Encoder::Software => format!(
             "video/x-raw,width={w},height={h},framerate={f}/1 ! videoconvert ! x264enc tune=zerolatency",
-            w = dim.width,
-            h = dim.height,
-            f = dim.framerate
+            w = pipe.size().width,
+            h = pipe.size().height,
+            f = pipe.size().framerate
         ),
         Encoder::Camera => format!(
             "video/x-h264,width={w},height={h},framerate={f}/1",
-            w = dim.width,
-            h = dim.height,
-            f = dim.framerate
+            w = pipe.size().width,
+            h = pipe.size().height,
+            f = pipe.size().framerate
         ),
-        Encoder::OpenMAX => format!("video/x-raw,width={w},height={h},framerate={f}/1 ! videoconvert ! video/x-raw,format=I420 ! omxh264enc ! video/x-h264,profile=baseline", w = dim.width, h = dim.height, f = dim.framerate)
+        Encoder::OpenMAX => format!(
+            "video/x-raw,width={w},height={h},framerate={f}/1 ! videoconvert ! video/x-raw,format=I420 ! omxh264enc ! video/x-h264,profile=baseline",
+            w = pipe.size().width, h = pipe.size().height, f = pipe.size().framerate)
     };
     vec![inp_str, enc_str, String::from("rtph264pay name=pay0")].join(" ! ")
 }
@@ -60,7 +66,7 @@ mod tests {
     fn test_raspberry_pipe() {
         assert_eq!(
             "rpicamsrc ! video/x-h264,width=320,height=240,framerate=30/1 ! rtph264pay name=pay0",
-            create_pipe(Input::Raspberry, Encoder::Camera, test_size())
+            create_pipe(&Pipe::new(Input::Raspberry, Encoder::Camera, test_size()))
         );
     }
 
@@ -69,17 +75,21 @@ mod tests {
         assert_eq!(
             "v4l2src device=/dev/video0 ! video/x-raw,width=320,height=240,framerate=30/1 ! videoconvert ! x264enc tune=zerolatency ! rtph264pay name=pay0",
             create_pipe(
-                Input::Video4Linux("/dev/video0".to_string()),
-                Encoder::Software,
-                test_size(),
+                &Pipe::new(
+                    Input::Video4Linux("/dev/video0".to_string()),
+                    Encoder::Software,
+                    test_size(),
+                )
             )
         );
         assert_eq!(
             "v4l2src device=/dev/video0 ! video/x-raw,width=320,height=240,framerate=30/1 ! videoconvert ! video/x-raw,format=I420 ! omxh264enc ! video/x-h264,profile=baseline ! rtph264pay name=pay0",
             create_pipe(
-                Input::Video4Linux("/dev/video0".to_string()),
-                Encoder::OpenMAX,
-                test_size(),
+                &Pipe::new(
+                    Input::Video4Linux("/dev/video0".to_string()),
+                    Encoder::OpenMAX,
+                    test_size(),
+                )
             )
         );
     }

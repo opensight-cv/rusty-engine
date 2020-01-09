@@ -9,7 +9,7 @@ use gstreamer_rtsp_server::{
 };
 use structopt::StructOpt;
 
-use pipe_builder::{Encoder, Input, VideoSize};
+use pipe_builder::{Encoder, Input, Pipe, VideoSize};
 
 #[derive(Debug, StructOpt)]
 #[structopt(
@@ -34,9 +34,10 @@ struct Opt {
         long,
         help = "Input mode to use",
         required_unless = "list",
+        required_unless = "pipes-as-json",
         possible_values(&["v4l2", "shmem", "rpi"])
     )]
-    input: Input,
+    input: Option<Input>, // this looks stupid, but some library freaks out without it. we get the desired effect at run anyway
     #[structopt(
         short,
         long,
@@ -54,6 +55,8 @@ struct Opt {
         default_value_if("input", Some("rpi"), "camera")
     )]
     encoder: Encoder,
+    #[structopt(long, help = "Pipelines to run as JSON.")]
+    pipes_as_json: Option<String>,
     #[structopt(long, help = "List all input modes and exit.", group = "list")]
     list_in: bool,
     #[structopt(long, help = "List all encoders and exit.", group = "list")]
@@ -79,30 +82,46 @@ fn main() {
         }
         return;
     }
-    // try to set up video size
-    let size = VideoSize::new(opt.width, opt.height, opt.framerate);
-    let device = opt.device.unwrap_or("".to_string());
-    let mut input = opt.input;
-    input = match input {
-        Input::Video4Linux(_) => Input::Video4Linux(device),
-        Input::SharedMemory(_) => Input::SharedMemory(device),
-        _ => input,
-    };
-    let encoder = opt.encoder;
-    let pipe = pipe_builder::create_pipe(input, encoder, size);
-    println!("Pipeline constructed: {}", pipe);
+    // set up basic Gst stuff
     gstreamer::init().expect("GStreamer could not init!");
     let loop_ = MainLoop::new(Option::None, false);
     let server = RTSPServer::new();
     server.set_service(&opt.net_opt.get_port().to_string());
-    let factory = RTSPMediaFactory::new();
-    factory.set_launch(&pipe);
-    factory.set_shared(true);
     let mounts = server
         .get_mount_points()
         .expect("Failed to get mount points");
-    // set up mounts
-    mounts.add_factory(opt.net_opt.get_url(), &factory);
+    if opt.pipes_as_json.is_some() {
+        let config = opt.pipes_as_json.unwrap();
+        let pipes: Vec<Pipe> = serde_json::from_str(&config).expect("JSON could not parse!");
+        println!("{:#?}", pipes);
+        for pipe in pipes.iter() {
+            let factory = RTSPMediaFactory::new();
+            let pipe_str = pipe_builder::create_pipe(pipe);
+            println!("Pipeline constructed: {}", pipe_str);
+            factory.set_launch(&pipe_str);
+            factory.set_shared(true);
+            mounts.add_factory(pipe.url(), &factory);
+        }
+    } else {
+        // try to set up video size
+        let size = VideoSize::new(opt.width, opt.height, opt.framerate);
+        let device = opt.device.unwrap_or("".to_string());
+        let mut input = opt.input.unwrap();
+        input = match input {
+            Input::Video4Linux(_) => Input::Video4Linux(device),
+            Input::SharedMemory(_) => Input::SharedMemory(device),
+            _ => input,
+        };
+        let encoder = opt.encoder;
+        let pipe = Pipe::new(input, encoder, size, String::from(opt.net_opt.get_url()));
+        let pipe_str = pipe_builder::create_pipe(&pipe);
+        println!("Pipeline constructed: {}", pipe_str);
+        let factory = RTSPMediaFactory::new();
+        factory.set_launch(&pipe_str);
+        factory.set_shared(true);
+        // set up mounts
+        mounts.add_factory(pipe.url(), &factory);
+    }
     server.attach(Option::None);
     println!("Starting loop...");
     loop_.run();
