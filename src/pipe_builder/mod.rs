@@ -32,7 +32,7 @@ pub fn create_pipe(inp: Input, enc: Encoder, dim: VideoSize) -> String {
     };
     let enc_str = match enc {
         Encoder::Software => format!(
-            "video/x-raw,width={w},height={h},framerate={f}/1 ! videoconvert ! x264enc",
+            "video/x-raw,width={w},height={h},framerate={f}/1 ! videoconvert ! x264enc tune=zerolatency",
             w = dim.width,
             h = dim.height,
             f = dim.framerate
@@ -43,7 +43,7 @@ pub fn create_pipe(inp: Input, enc: Encoder, dim: VideoSize) -> String {
             h = dim.height,
             f = dim.framerate
         ),
-        Encoder::OpenMAX => format!("videoconvert ! video/x-raw,format=I420,width={w},height={h},framerate={f}/1 ! omxh264enc ! video/x-h264", w = dim.width, h = dim.height, f = dim.framerate)
+        Encoder::OpenMAX => format!("video/x-raw,width={w},height={h},framerate={f}/1 ! videoconvert ! video/x-raw,format=I420 ! omxh264enc ! video/x-h264,profile=baseline", w = dim.width, h = dim.height, f = dim.framerate)
     };
     vec![inp_str, enc_str, String::from("rtph264pay name=pay0")].join(" ! ")
 }
@@ -67,7 +67,7 @@ mod tests {
     #[test]
     fn test_v4l2_pipes() {
         assert_eq!(
-            "v4l2src device=/dev/video0 ! video/x-raw,width=320,height=240,framerate=30/1 ! videoconvert ! x264enc ! rtph264pay name=pay0",
+            "v4l2src device=/dev/video0 ! video/x-raw,width=320,height=240,framerate=30/1 ! videoconvert ! x264enc tune=zerolatency ! rtph264pay name=pay0",
             create_pipe(
                 Input::Video4Linux("/dev/video0".to_string()),
                 Encoder::Software,
@@ -75,7 +75,7 @@ mod tests {
             )
         );
         assert_eq!(
-            "v4l2src device=/dev/video0 ! videoconvert ! video/x-raw,format=I420,width=320,height=240,framerate=30/1 ! omxh264enc ! video/x-h264 ! rtph264pay name=pay0",
+            "v4l2src device=/dev/video0 ! video/x-raw,width=320,height=240,framerate=30/1 ! videoconvert ! video/x-raw,format=I420 ! omxh264enc ! video/x-h264,profile=baseline ! rtph264pay name=pay0",
             create_pipe(
                 Input::Video4Linux("/dev/video0".to_string()),
                 Encoder::OpenMAX,
