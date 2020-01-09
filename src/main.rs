@@ -9,7 +9,7 @@ use gstreamer_rtsp_server::{
 };
 use structopt::StructOpt;
 
-use pipe_builder::{Encoder, Input, VideoSize};
+use pipe_builder::{Encoder, Input, Pipe, VideoSize};
 
 #[derive(Debug, StructOpt)]
 #[structopt(
@@ -89,7 +89,7 @@ fn main() {
         _ => input,
     };
     let encoder = opt.encoder;
-    let pipe = pipe_builder::create_pipe(input, encoder, size);
+    let pipe = pipe_builder::create_pipe(&Pipe::new(input, encoder, size));
     println!("Pipeline constructed: {}", pipe);
     gstreamer::init().expect("GStreamer could not init!");
     let loop_ = MainLoop::new(Option::None, false);
