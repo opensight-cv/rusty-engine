@@ -64,7 +64,7 @@ mod tests {
     fn test_raspberry_pipe() {
         assert_eq!(
             "rpicamsrc ! video/x-h264,width=320,height=240,framerate=30/1 ! rtph264pay name=pay0",
-            create_pipe(Input::Raspberry, Encoder::Camera, test_size())
+            create_pipe(&Pipe::new(Input::Raspberry, Encoder::Camera, test_size()))
         );
     }
 
@@ -73,17 +73,21 @@ mod tests {
         assert_eq!(
             "v4l2src device=/dev/video0 ! video/x-raw,width=320,height=240,framerate=30/1 ! videoconvert ! x264enc tune=zerolatency ! rtph264pay name=pay0",
             create_pipe(
-                Input::Video4Linux("/dev/video0".to_string()),
-                Encoder::Software,
-                test_size(),
+                &Pipe::new(
+                    Input::Video4Linux("/dev/video0".to_string()),
+                    Encoder::Software,
+                    test_size(),
+                )
             )
         );
         assert_eq!(
             "v4l2src device=/dev/video0 ! video/x-raw,width=320,height=240,framerate=30/1 ! videoconvert ! video/x-raw,format=I420 ! omxh264enc ! video/x-h264,profile=baseline ! rtph264pay name=pay0",
             create_pipe(
-                Input::Video4Linux("/dev/video0".to_string()),
-                Encoder::OpenMAX,
-                test_size(),
+                &Pipe::new(
+                    Input::Video4Linux("/dev/video0".to_string()),
+                    Encoder::OpenMAX,
+                    test_size(),
+                )
             )
         );
     }
