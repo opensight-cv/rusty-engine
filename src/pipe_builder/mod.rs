@@ -2,6 +2,9 @@ mod encoder;
 mod input;
 pub use self::{encoder::Encoder, input::Input};
 
+use serde::Deserialize;
+
+#[derive(Deserialize)]
 pub struct VideoSize {
     width: u32,
     height: u32,
