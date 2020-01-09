@@ -8,15 +8,23 @@ pub struct Pipe {
 }
 
 impl Pipe {
-    pub fn input(&self) -> super::Input {
-        self.input
+    pub fn new(input: super::Input, encoder: super::Encoder, size: super::VideoSize) -> Pipe {
+        Pipe {
+            input,
+            encoder,
+            size,
+        }
     }
 
-    pub fn encoder(&self) -> super::Encoder {
-        self.encoder
+    pub fn input(&self) -> &super::Input {
+        &self.input
     }
 
-    pub fn size(&self) -> super::VideoSize {
-        self.size
+    pub fn encoder(&self) -> &super::Encoder {
+        &self.encoder
+    }
+
+    pub fn size(&self) -> &super::VideoSize {
+        &self.size
     }
 }
