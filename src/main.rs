@@ -36,7 +36,7 @@ struct Opt {
         required_unless = "list",
         possible_values(&["v4l2", "shmem", "rpi"])
     )]
-    input: Input,
+    input: Option<Input>, // this looks stupid, but some library freaks out without it. we get the desired effect at run anyway
     #[structopt(
         short,
         long,
@@ -82,7 +82,7 @@ fn main() {
     // try to set up video size
     let size = VideoSize::new(opt.width, opt.height, opt.framerate);
     let device = opt.device.unwrap_or("".to_string());
-    let mut input = opt.input;
+    let mut input = opt.input.unwrap();
     input = match input {
         Input::Video4Linux(_) => Input::Video4Linux(device),
         Input::SharedMemory(_) => Input::SharedMemory(device),
