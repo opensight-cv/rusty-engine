@@ -32,7 +32,7 @@ pub fn create_pipe(inp: Input, enc: Encoder, dim: VideoSize) -> String {
     };
     let enc_str = match enc {
         Encoder::Software => format!(
-            "video/x-raw,width={w},height={h},framerate={f}/1 ! videoconvert ! x264enc",
+            "video/x-raw,width={w},height={h},framerate={f}/1 ! videoconvert ! x264enc tune=zerolatency",
             w = dim.width,
             h = dim.height,
             f = dim.framerate
