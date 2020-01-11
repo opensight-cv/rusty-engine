@@ -93,7 +93,6 @@ fn main() {
     if opt.pipes_as_json.is_some() {
         let config = opt.pipes_as_json.unwrap();
         let pipes: Vec<Pipe> = serde_json::from_str(&config).expect("JSON could not parse!");
-        println!("{:#?}", pipes);
         for pipe in pipes.iter() {
             let factory = RTSPMediaFactory::new();
             let pipe_str = pipe_builder::create_pipe(pipe);
