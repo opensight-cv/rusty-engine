@@ -1,6 +1,6 @@
 [package]
 name = "rusty-engine"
-version = "0.2.0"
+version = "0.2.2"
 description = "Rust reimagining of potential-engine"
 readme = "README.md"
 license = "MIT"
