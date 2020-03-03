@@ -23,6 +23,7 @@ impl VideoSize {
 }
 
 pub fn create_pipe(pipe: &Pipe) -> String {
+    // https://stackoverflow.com/a/52682628/3551604
     if *pipe.input() == Input::Raspberry && *pipe.encoder() != Encoder::Camera {
         println!("using a raspberry pi camera with any encoder besides the one provided by the driver is a Bad Idea");
     }
