@@ -1,5 +1,5 @@
 use serde::Deserialize;
-use std::{convert, fmt, str::FromStr};
+use std::{fmt, str::FromStr};
 
 #[derive(Debug, PartialEq, Deserialize)]
 pub enum Input {
@@ -29,13 +29,15 @@ impl fmt::Display for Input {
 }
 
 impl FromStr for Input {
-    type Err = convert::Infallible;
+    // TODO: Meaningful error type
+    type Err = String;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
             "rpi" => Ok(Self::Raspberry),
             "shmem" => Ok(Self::SharedMemory(String::new())),
-            "v4l2" | _ => Ok(Self::Video4Linux(String::new())),
+            "v4l2" => Ok(Self::Video4Linux(String::new())),
+            _ => Err(format!("{} is not a valid input type!", s)),
         }
     }
 }

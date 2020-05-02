@@ -2,7 +2,6 @@ mod networker;
 mod pipe_builder;
 
 use glib::MainLoop;
-use gstreamer;
 use gstreamer_rtsp_server::{
     RTSPMediaFactory, RTSPMediaFactoryExt, RTSPMountPointsExt, RTSPServer, RTSPServerExt,
     RTSPServerExtManual,
@@ -104,7 +103,7 @@ fn main() {
     } else {
         // try to set up video size
         let size = VideoSize::new(opt.width, opt.height, opt.framerate);
-        let device = opt.device.unwrap_or("".to_string());
+        let device = opt.device.unwrap_or_default();
         let mut input = opt.input.unwrap();
         input = match input {
             Input::Video4Linux(_) => Input::Video4Linux(device),

@@ -1,5 +1,5 @@
 use serde::Deserialize;
-use std::{convert, fmt, str::FromStr};
+use std::{fmt, str::FromStr};
 
 #[derive(Debug, PartialEq, Eq, Deserialize)]
 pub enum Encoder {
@@ -25,14 +25,15 @@ impl fmt::Display for Encoder {
 }
 
 impl FromStr for Encoder {
-    // shut up
-    type Err = convert::Infallible;
+    // TODO: Meaningful error type
+    type Err = String;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
             "omx" => Ok(Encoder::OpenMAX),
             "camera" => Ok(Encoder::Camera),
-            "x264enc" | _ => Ok(Encoder::Software),
+            "x264enc" => Ok(Encoder::Software),
+            _ => Err(format!("{} is not an encoder type", s)),
         }
     }
 }
