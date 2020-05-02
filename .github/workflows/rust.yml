@@ -1,10 +1,6 @@
 name: Rust
 
-on:
-  push:
-    branches: [ master, develop ]
-  pull_request:
-    branches: [ master, develop ]
+on: [push, pull_request]
 
 jobs:
   build:
@@ -12,8 +8,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Install apt dependencies
+      run: | 
+        sudo apt install libgstreamer1.0-dev
+        libgstreamer-plugins-base1.0-dev
+        gstreamer1.0-plugins-base
+        gstreamer1.0-plugins-good
+        gstreamer1.0-plugins-bad
+        gstreamer1.0-plugins-ugly
+        gstreamer1.0-libav
+        libgstrtspserver-1.0-dev
     - uses: actions/checkout@v2
-    - name: Install Nightly Rust
+    - name: Install Rust
       uses: actions-rs/toolchain@v1
       with:
         toolchain: stable
