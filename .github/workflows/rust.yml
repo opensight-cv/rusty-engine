@@ -10,7 +10,7 @@ jobs:
     steps:
     - name: Install apt dependencies
       run: |
-        sudo export DEBIAN_FRONTEND=noninteractive
+        export DEBIAN_FRONTEND=noninteractive
         sudo apt-get update -yq
         sudo apt-get -yq --no-install-suggests --no-install-recommends install \
         libgstreamer1.0-dev \
