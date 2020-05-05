@@ -15,4 +15,9 @@
 
 # End of https://www.gitignore.io/api/rust
 
-docker/qemu-arm-static
+# Debian packaging materials
+pkg-debian/usr
+pkg-debian/DEBIAN/md5sums
+!pkg-debian/DEBIAN/control
+# built Debian packages
+*.deb
