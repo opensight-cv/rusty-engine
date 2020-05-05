@@ -13,9 +13,8 @@ mkdir -p pkg-debian/usr/bin
 mkdir -p pkg-debian/usr/share/doc/rusty-engine
 
 # copy files into place
-cp ./target/armv7-unknown-linux-gnueabihf/debug/rusty-engine pkg-debian/usr/bin
+cp ./target/armv7-unknown-linux-gnueabihf/release/rusty-engine pkg-debian/usr/bin
 cp ./README.md pkg-debian/usr/share/doc/rusty-engine
-# cp ./copyright pkg-debian/usr/share/doc/rusty-engine
 cat > pkg-debian/usr/share/doc/rusty-engine/copyright <<EOF
 Upstream Name: rusty-engine
 Source: https://github.com/opensight-cv/rusty-engine
