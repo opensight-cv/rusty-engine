@@ -19,9 +19,10 @@ ${DOCKER} build -t rusty-engine:latest docker/
 
 if [ "${last}" == "run" ]; then
     ${DOCKER} run --rm --user "$(id -u)":"$(id -g)" -v "$PWD":/usr/src/myapp -w /usr/src/myapp rusty-engine:latest cargo build --release
-    ${DOCKER} run --rm --privileged \
-        --volume "$(pwd)":/docking-bay \
-        rusty-engine:latest \
-        bash -e -o pipefail -c \
-        "cd /docking-bay; cargo deb"
+    # skip this for now
+    #${DOCKER} run --rm --privileged \
+    #    --volume "$(pwd)":/docking-bay \
+    #    rusty-engine:latest \
+    #    bash -e -o pipefail -c \
+    #    "cd /docking-bay; cargo deb"
 fi
