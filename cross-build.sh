@@ -18,7 +18,7 @@ for last in "$@"; do :; done
 ${DOCKER} build -t rusty-engine:latest docker/
 
 if [ "${last}" == "run" ]; then
-    cross build --target armv7-unknown-linux-gnueabihf --release
+    ${DOCKER} run --rm --user "$(id -u)":"$(id -g)" -v "$PWD":/usr/src/myapp -w /usr/src/myapp rusty-engine:latest cargo build --release
     ${DOCKER} run --rm --privileged \
         --volume "$(pwd)":/docking-bay \
         rusty-engine:latest \
