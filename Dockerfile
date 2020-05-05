@@ -1,8 +1,5 @@
 FROM arm32v7/rust:1.43
 
-WORKDIR /usr/src/rusty-engine
-COPY . .
-
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get -y update
