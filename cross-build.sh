@@ -18,7 +18,7 @@ for last in "$@"; do :; done
 ${DOCKER} build -t rusty-engine:latest .
 
 if [ "${last}" == "run" ]; then
-    ${DOCKER} run --rm --user "$(id -u)":"$(id -g)" -v "$(pwd)":/usr/src/rusty-engine -w /usr/src/rusty-engine rusty-engine:latest cargo build --release
+    cross build --release --target armv7-unknown-linux-gnueabihf
     # skip this for now
     #${DOCKER} run --rm --privileged \
     #    --volume "$(pwd)":/usr/src/rusty-engine \
