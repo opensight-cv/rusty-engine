@@ -11,18 +11,8 @@ if ! ${DOCKER} ps >/dev/null; then
     ${DOCKER} ps
     exit 1
 fi
-# bind last argument in portable manner
-for last in "$@"; do :; done
 
 # build image
 ${DOCKER} build -t rusty-engine:latest .
 
-if [ "${last}" == "run" ]; then
-    cross build --release --target armv7-unknown-linux-gnueabihf
-    # skip this for now
-    #${DOCKER} run --rm --privileged \
-    #    --volume "$(pwd)":/usr/src/rusty-engine \
-    #    -w /usr/src/rusty-engine
-    #    rusty-engine:latest \
-    #    cargo deb
-fi
+cross build --release --target armv7-unknown-linux-gnueabihf

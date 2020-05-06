@@ -21,7 +21,7 @@ sudo apt update && sudo apt install libgstreamer1.0-dev \
 
 Running `cross-build.sh` with [`cross`](https://github.com/rust-embedded/cross) and Docker installed should (eventually) produce an ARM 32 executable file suitable for use with Raspbian in `target/arm7-unknown-linux-gnueabihf/release`.
 
-If you want an installable `.deb` file, run `deb-pack.sh` **after running `cross-build.sh.**
+If you want an installable `.deb` file, run `deb-pack.sh` **after running `cross-build.sh`.**
 
 However, `rusty-engine` is not incredibly heavyweight and can almost certainly be compiled on your Pi without the use of any particular configuration beyond [installing the dependencies.](#dependencies)
 
