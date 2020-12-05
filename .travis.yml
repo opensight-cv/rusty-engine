@@ -13,7 +13,7 @@ addons:
     update: true
 arch:
   - amd64
-  - arm64 # while this technically isn't the RPi4 it's a nice proof of concept 
+  - arm64 
 cache: cargo
 before_deploy:
   - cargo deb

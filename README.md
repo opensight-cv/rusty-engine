@@ -19,9 +19,11 @@ sudo apt update && sudo apt install libgstreamer1.0-dev \
 ## Cross-Compiling for Raspberry Pi
 (because Travis won't give ARM 32 VMs...)
 
-Running `cross-build.sh` with [`cross`](https://github.com/rust-embedded/cross) and `qemu-arm-static` installed should (eventually) produce an ARM 32 executable file suitable for use with Raspbian in `target/arm7-unknown-linux-gnueabihf/release`.
+Running `cross-build.sh` with [`cross`](https://github.com/rust-embedded/cross) and Docker installed should (eventually) produce an ARM 32 executable file suitable for use with Raspbian in `target/arm7-unknown-linux-gnueabihf/release`.
 
-This takes a long, long time thanks to the involvement of Docker and QEMU. Building on real hardware is probably faster and saner.
+If you want an installable `.deb` file, run `deb-pack.sh` **after running `cross-build.sh`.** You need `dpkg` to run `deb-pack.sh`.
+
+However, `rusty-engine` is not incredibly heavyweight and can almost certainly be compiled on your Pi without the use of any particular configuration beyond [installing the dependencies.](#dependencies)
 
 Licensing
 ---
